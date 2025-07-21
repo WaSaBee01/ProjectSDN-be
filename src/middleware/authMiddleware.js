@@ -13,7 +13,7 @@ const authMiddleware = (req, res, next) => {
         }
         if (user?.isAdmin) {
             next();
-        }else{
+        } else {
             return res.status(404).json({
                 status: 'ERR',
                 message: 'The authentication failed'
@@ -34,7 +34,7 @@ const authUserMiddleware = (req, res, next) => {
         }
         if (user?.isAdmin || user?.id === userId) {
             next();
-        }else{
+        } else {
             return res.status(404).json({
                 status: 'ERR',
                 message: 'The authentication failed'

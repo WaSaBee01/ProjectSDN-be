@@ -61,7 +61,7 @@ const cancelOrder = async (req, res) => {
         if (!orderId) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'User ID is required'
+                message: 'Order ID is required'
             })
         }
         const response = await OrderService.cancelOrder(orderId, data);

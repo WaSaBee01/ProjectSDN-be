@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { countDocuments } = require("./UserModel");
 
 const productSchema = new mongoose.Schema(
     {
