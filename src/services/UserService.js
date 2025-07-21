@@ -1,4 +1,5 @@
 const User = require('../models/UserModel');
+const Order = require('../models/OrderProduct');
 const bcrypt = require("bcrypt");
 const { genneralAccessToken, genneralRefreshToken } = require('./jwtService');
 
@@ -110,29 +111,35 @@ const updateUser = (id, data) => {
 }
 
 const deleteUser = (id) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const checkUser = await User.findOne({
-                _id: id
-            })
-            if (checkUser === null) {
-                resolve({
-                    status: 'ERR',
-                    message: 'The user does not exist'
-                })
-            }
+  return new Promise(async (resolve, reject) => {
+    try {
+      const checkUser = await User.findOne({ _id: id });
+      if (checkUser === null) {
+        return resolve({
+          status: 'ERR',
+          message: 'The user does not exist'
+        });
+      }
 
-            await User.findByIdAndDelete(id)
+      const hasOrder = await Order.exists({ user: id });
+      if (hasOrder) {
+        return resolve({
+          status: 'ERR',
+          message: 'Cannot delete users with existing orders.'
+        });
+      }
 
-            resolve({
-                status: 'OK',
-                message: 'Delete user success',
-            })
-        } catch (e) {
-            reject(e);
-        }
-    });
-}
+      await User.findByIdAndDelete(id);
+
+      resolve({
+        status: 'OK',
+        message: 'Delete user success',
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
 
 const deleteManyUser = (ids) => {
     return new Promise(async (resolve, reject) => {
